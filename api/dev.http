@@ -4,3 +4,7 @@ content-type: application/json
 {
 	"original": "https://github.com/"
 }
+
+###
+
+GET http://localhost:8000/link/GkVNtZibnoQz8gq9mUFU6 HTTP/1.1

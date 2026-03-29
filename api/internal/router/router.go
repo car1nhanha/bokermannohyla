@@ -14,6 +14,8 @@ func SetupRouter(linkHandler *handler.LinkHandler) *gin.Engine {
 	})
 
 	r.POST("/link", linkHandler.Create)
+	r.GET("/link/:id", linkHandler.GetById)
+	r.GET("/links", linkHandler.GetByIP)
 
 	return r
 }

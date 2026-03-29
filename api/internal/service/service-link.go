@@ -18,3 +18,16 @@ func (s *LinkService) Create(ctx context.Context, link *model.Link) error {
 	// 👉 aqui entra regra de negócio depois
 	return s.repo.Create(ctx, link)
 }
+
+func (s *LinkService) FindByID(ctx context.Context, id string) (*model.Link, error) {
+	return s.repo.FindByID(ctx, id)
+}
+
+func (s *LinkService) IncrementAccesses(ctx context.Context, link *model.Link) error {
+	link.Accesses++
+	return s.repo.Create(ctx, link)
+}
+
+func (s *LinkService) FindByIP(ctx context.Context, ip string) ([]*model.Link, error) {
+	return s.repo.FindByIP(ctx, ip)
+}
