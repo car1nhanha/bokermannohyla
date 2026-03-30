@@ -1,0 +1,58 @@
+name: Deploy AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build & Deploy Lambda
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        working-directory: ./api
+
+    env:
+      AWS_REGION: sa-east-1
+      FUNCTION_NAME: thoropa
+      GOOS: linux
+      GOARCH: amd64
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PERSONAL_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::375145148456:role/GitHubActionRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Download Go modules
+        run: go mod download
+
+      - name: Build Lambda binary
+        run: |
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap ./cmd/api/main.go
+          chmod +x bootstrap
+
+      - name: Deploy Lambda Function
+        uses: aws-actions/aws-lambda-deploy@v1
+        with:
+          function-name: ${{ env.FUNCTION_NAME }}
+          code-artifacts-dir: ./api
+          handler: bootstrap
+          runtime: provided.al2
