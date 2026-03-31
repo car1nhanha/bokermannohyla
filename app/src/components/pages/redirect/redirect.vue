@@ -1,13 +1,22 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+import { ApiService } from "../../../service/api";
 import TemplateCard from "../../templates/TemplateCard.vue";
+
+const route = useRoute();
+const id = route.params.id;
 
 let success = ref(true);
 
-onMounted(() => {
-  setTimeout(() => {
-    success.value = false;
-  }, 3000);
+watchEffect(() => {
+  ApiService.getLink(id as string)
+    .then((response) => {
+      window.location.href = `${response.Original}`;
+    })
+    .catch(() => {
+      success.value = false;
+    });
 });
 </script>
 

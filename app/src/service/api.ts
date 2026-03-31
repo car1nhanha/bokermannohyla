@@ -15,6 +15,14 @@ export interface ResponseGetLink {
 }
 
 export class ApiService {
+  public static async getLink(id: string): Promise<ResponseGetLink> {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/link/${id}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch link");
+    }
+    return response.json();
+  }
+
   public static async getLinks(): Promise<ResponseGetLink[]> {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/links`);
     if (!response.ok) {

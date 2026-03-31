@@ -9,7 +9,7 @@ import "./style.css";
 
 const routes = [
   { path: "/", component: Home },
-  { path: "/redirect/:id", component: Redirect },
+  { path: "/:id", component: Redirect },
 ];
 
 export const router = createRouter({
