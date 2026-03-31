@@ -45,7 +45,11 @@ func normalizeClientIP(raw string) string {
 func (h *LinkHandler) Create(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 3*time.Second)
 	defer cancel()
-	id, _ := gonanoid.New()
+	id, err := gonanoid.New(10)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Falha ao gerar identificador"})
+		return
+	}
 
 	var l DataBody
 
@@ -62,7 +66,7 @@ func (h *LinkHandler) Create(c *gin.Context) {
 		Original:  l.Original,
 	}
 
-	err := h.service.Create(ctx, &link)
+	err = h.service.Create(ctx, &link)
 
 	if err != nil {
 		fmt.Println(err)
@@ -106,4 +110,29 @@ func (h *LinkHandler) GetByIP(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, links)
+}
+
+func (h *LinkHandler) DeleteById(c *gin.Context) {
+	id := c.Param("id")
+
+	link, err := h.service.FindByID(c, id)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if link == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Link não encontrado"})
+		return
+	}
+
+	err = h.service.DeleteByID(c, id)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Link deletado com sucesso"})
 }

@@ -96,3 +96,14 @@ func (r *LinkRepository) FindByIP(ctx context.Context, ip string) ([]*model.Link
 
 	return links, nil
 }
+
+func (r *LinkRepository) DeleteByID(ctx context.Context, id string) error {
+	_, err := r.client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		TableName: aws.String(r.table),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: id},
+		},
+	})
+
+	return err
+}

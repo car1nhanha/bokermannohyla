@@ -78,10 +78,15 @@
 
 .form {
   flex: 1;
+  height: min-content;
 }
+
 .history {
   flex: 2;
   height: min-content;
+  max-height: 440px;
+  min-height: 234px;
+  overflow: hidden;
 }
 
 .form .form-content {

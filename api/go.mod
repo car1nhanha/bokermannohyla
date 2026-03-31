@@ -10,6 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.36
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.57.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.16.2
+	github.com/gin-contrib/cors v1.7.7
 	github.com/gin-gonic/gin v1.12.0
 	github.com/joho/godotenv v1.5.1
 	github.com/matoous/go-nanoid/v2 v2.1.0

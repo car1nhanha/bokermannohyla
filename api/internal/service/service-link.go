@@ -31,3 +31,7 @@ func (s *LinkService) IncrementAccesses(ctx context.Context, link *model.Link) e
 func (s *LinkService) FindByIP(ctx context.Context, ip string) ([]*model.Link, error) {
 	return s.repo.FindByIP(ctx, ip)
 }
+
+func (s *LinkService) DeleteByID(ctx context.Context, id string) error {
+	return s.repo.DeleteByID(ctx, id)
+}
