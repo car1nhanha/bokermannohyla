@@ -11,6 +11,10 @@
 
 ---
 
+![Screenshot](./screenshot.png)
+
+---
+
 ## Visao Geral
 
 O Thoropa conecta:
