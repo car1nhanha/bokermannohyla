@@ -29,6 +29,7 @@ Hoje o projeto ja possui:
 - Cadastro de link original
 - Consulta de link por id
 - Listagem de links por IP cliente
+- Exclusao de link por id
 - Adapter Gin -> Lambda com API Gateway v2
 
 ---
@@ -131,7 +132,12 @@ AWS_SECRET_ACCESS_KEY=...
 
 ### Frontend
 
-No estado atual, o frontend nao depende de variaveis de ambiente obrigatorias.
+O frontend depende da variavel abaixo para apontar para a API:
+
+```env
+# app/.env
+VITE_API_URL=http://localhost:8080
+```
 
 ---
 
@@ -213,7 +219,7 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap ./cmd/api/main.go
 ## Rotas do Frontend
 
 - / -> Pagina principal
-- /redirect/:id -> Tela de redirecionamento
+- /:id -> Tela de redirecionamento
 
 ---
 
@@ -250,6 +256,10 @@ Busca um link pelo id.
 ### GET /links
 
 Lista links pelo IP do cliente (normalizado no backend).
+
+### DELETE /link/:id
+
+Deleta um link pelo id.
 
 ---
 

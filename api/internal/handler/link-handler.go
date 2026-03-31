@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"strings"
 	"thoropa/internal/model"
 	"thoropa/internal/service"
 	"time"
@@ -26,6 +27,15 @@ func NewLinkHandler(s *service.LinkService) *LinkHandler {
 }
 
 func normalizeClientIP(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+
+	if host, _, err := net.SplitHostPort(raw); err == nil {
+		raw = host
+	}
+
 	ip := net.ParseIP(raw)
 	if ip == nil {
 		return raw
@@ -40,6 +50,32 @@ func normalizeClientIP(raw string) string {
 	}
 
 	return ip.String()
+}
+
+func getClientIP(c *gin.Context) string {
+	candidates := []string{
+		c.ClientIP(),
+		c.GetHeader("X-Forwarded-For"),
+		c.GetHeader("X-Real-IP"),
+		c.Request.RemoteAddr,
+	}
+
+	for _, candidate := range candidates {
+		if candidate == "" {
+			continue
+		}
+
+		if strings.Contains(candidate, ",") {
+			candidate = strings.Split(candidate, ",")[0]
+		}
+
+		normalized := normalizeClientIP(candidate)
+		if normalized != "" {
+			return normalized
+		}
+	}
+
+	return "unknown"
 }
 
 func (h *LinkHandler) Create(c *gin.Context) {
@@ -60,7 +96,7 @@ func (h *LinkHandler) Create(c *gin.Context) {
 
 	link := model.Link{
 		Id:        id,
-		Ip:        normalizeClientIP(c.ClientIP()),
+		Ip:        getClientIP(c),
 		CreatedAt: time.Now().Unix(),
 		Accesses:  0,
 		Original:  l.Original,
@@ -97,7 +133,7 @@ func (h *LinkHandler) GetById(c *gin.Context) {
 }
 
 func (h *LinkHandler) GetByIP(c *gin.Context) {
-	ip := normalizeClientIP(c.ClientIP())
+	ip := getClientIP(c)
 
 	fmt.Printf("Buscando links para IP: %s\n", ip)
 
