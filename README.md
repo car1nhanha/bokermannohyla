@@ -1,5 +1,7 @@
 # Thoropa
 
+> Espécie `Thoropa taophora` é endêmica da Serra do Mar e do litoral de São Paulo.
+
 > Encurtador de links fullstack com frontend em Vue 3 e backend em Go, com suporte a execução local e deploy em AWS Lambda.
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
